@@ -7,12 +7,16 @@ on:
   release:
     types: [published]
 
+permissions:
+  contents: read
+  id-token: write
+
 defaults:
   run:
     shell: bash
 
 jobs:
-  test:
+  publish:
     name: Publish to NPM
     runs-on: ubuntu-latest
     steps:
@@ -24,29 +28,24 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
 
       - name: Install Dependencies
-        run: npm install
+        run: npm ci
+
+      - name: Build
+        run: npm run build
 
       - name: Run Tests
         run: npm run test
 
       - name: Publish
         if: ${{ !github.event.release.prerelease }}
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: |
-          npm publish --tag latest --access=public
+        run: npm publish --provenance --access=public
 
       - name: Publish Pre-Release
         if: ${{ github.event.release.prerelease }}
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           # Strip leading "v" from tag. E.g. "v1.2.0-beta" -> "1.2.0-beta"
           CLEAN_TAG=$(echo "${{ github.event.release.tag_name }}" | sed 's/^v//')
           jq ".version=\"${CLEAN_TAG}\"" package.json > package.json.deploy
           cp package.json.deploy package.json
 
-          echo "Deploying with package.json"
-          cat package.json
-
-          npm publish --tag next --access=public
+          npm publish --provenance --tag next --access=public

@@ -1,21 +1,21 @@
-# @rapidfolio/connect-node
+# @rapidfolio/connection-sdk-node
 
-Node.js SDK for exposing functions from your internal systems to the Rapid AI agent via private connections.
+Node.js SDK for exposing functions from your internal systems to Rapidfolio procedures via private connections.
 
 ## Installation
 
 ```bash
-npm install @rapidfolio/connect-node zod
+npm install @rapidfolio/connection-sdk-node zod
 ```
 
 ## Quick start
 
-1. Create a **Private Connection** in the Rapid dashboard. A token is generated for you.
+1. Create a **Private Connection** in the Rapidfolio dashboard. A token is generated for you.
 2. Copy the token and set it as an environment variable.
 3. Write your functions:
 
 ```typescript
-import { connect } from '@rapidfolio/connect-node'
+import { connect } from '@rapidfolio/connection-sdk-node'
 import { z } from 'zod'
 
 const conn = await connect({
@@ -83,6 +83,8 @@ await connect(functions, {
   token?: string          // Default: RAPID_TOKEN env var
   baseUrl?: string        // Default: RAPID_API_URL env var or https://run.rapidfolio.com
   retryDelayMs?: number   // Delay before re-polling after an idle or error cycle. Default: 3000
+  maxConcurrency?: number // Max concurrent handler invocations. Default: 10
+  workerId?: string       // Stable worker ID, e.g. pod name. Default: RAPID_WORKER_ID env var or random UUID
   logger?: ConnectionLogger
 })
 ```
@@ -123,7 +125,7 @@ Runs handlers inline without any network calls. Useful for unit tests. No token 
 For incremental registration or custom lifecycle control, use `Connection` directly:
 
 ```typescript
-import { Connection } from '@rapidfolio/connect-node'
+import { Connection } from '@rapidfolio/connection-sdk-node'
 
 const conn = new Connection({ token: 'run_sandbox_xxx' })
 
@@ -150,3 +152,4 @@ If a token is revoked (via **Regenerate token** in the dashboard):
 |---|---|
 | `RAPID_TOKEN` | Connection token (`run_sandbox_…` or `run_live_…`) |
 | `RAPID_API_URL` | Override the API base URL (useful for local dev or self-hosted) |
+| `RAPID_WORKER_ID` | Stable worker identifier, e.g. Kubernetes pod name |
