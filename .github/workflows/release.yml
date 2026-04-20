@@ -1,0 +1,52 @@
+name: Release
+
+on:
+  # Support manually pushing a new release
+  workflow_dispatch: {}
+  # Trigger when a release or a pre-release is published
+  release:
+    types: [published]
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  test:
+    name: Publish to NPM
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Run Tests
+        run: npm run test
+
+      - name: Publish
+        if: ${{ !github.event.release.prerelease }}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          npm publish --tag latest --access=public
+
+      - name: Publish Pre-Release
+        if: ${{ github.event.release.prerelease }}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          # Strip leading "v" from tag. E.g. "v1.2.0-beta" -> "1.2.0-beta"
+          CLEAN_TAG=$(echo "${{ github.event.release.tag_name }}" | sed 's/^v//')
+          jq ".version=\"${CLEAN_TAG}\"" package.json > package.json.deploy
+          cp package.json.deploy package.json
+
+          echo "Deploying with package.json"
+          cat package.json
+
+          npm publish --tag next --access=public

@@ -1,0 +1,54 @@
+{
+  "name": "@rapidfolio/connection-sdk-node",
+  "version": "0.2.0",
+  "description": "Node.js SDK for exposing internal functions to Rapidfolio procedures via private connections",
+  "type": "module",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rapidfolio/connect-node"
+  },
+  "keywords": [
+    "rapidfolio",
+    "ai",
+    "agent",
+    "automation",
+    "sdk",
+    "connection"
+  ],
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc -w",
+    "test": "vitest",
+    "lint": "eslint 'src/**/*.ts'",
+    "example": "tsx examples/runner.ts"
+  },
+  "peerDependencies": {
+    "zod": ">=4"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^25.6.0",
+    "eslint": "^10.2.1",
+    "eslint-plugin-simple-import-sort": "^13.0.0",
+    "tsx": "^4.21.0",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.59.0",
+    "vitest": "^4.1.4",
+    "zod": "^4.3.6"
+  }
+}
