@@ -1,6 +1,6 @@
 {
   "name": "@rapidfolio/connection-sdk-node",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Node.js SDK for exposing internal functions to Rapidfolio procedures via private connections",
   "type": "module",
   "license": "Apache-2.0",
@@ -37,7 +37,7 @@
     "lint": "eslint 'src/**/*.ts'",
     "example": "tsx examples/runner.ts"
   },
-  "peerDependencies": {
+  "dependencies": {
     "zod": ">=4"
   },
   "devDependencies": {

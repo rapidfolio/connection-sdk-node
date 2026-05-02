@@ -5,7 +5,7 @@ Node.js SDK for exposing functions from your internal systems to Rapidfolio proc
 ## Installation
 
 ```bash
-npm install @rapidfolio/connection-sdk-node zod
+npm install @rapidfolio/connection-sdk-node
 ```
 
 ## Quick start
